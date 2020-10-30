@@ -3,12 +3,29 @@
  */
 package org.barakg.avro.schema.evolution;
 
+import java.io.IOException;
+import java.net.ConnectException;
+
 public class Main {
-    public String getGreeting() {
-        return "Hello world.";
+    public static void main(String[] args) {
+        System.out.println("Posting compatibility levels checks: " + (testPostingToSchemaRegistry() ? "Done" : "Failed"));
     }
 
-    public static void main(String[] args) {
-        System.out.println(new Main().getGreeting());
+    private static boolean testPostingToSchemaRegistry(){
+        boolean hasAllCompletedAsExpected = true;
+        for (CompatibilityLevel level : CompatibilityLevel.values()) {
+            try {
+                SchemaRegistryApi.getInstance().setCurrentCompatibilityLevel(level);
+                CompatibilityLevel actualCompatibilityLevel =
+                        SchemaRegistryApi.getInstance().getCurrentCompatibilityLevel();
+                if (!level.equals(actualCompatibilityLevel)){
+                    System.out.println("Houston we have a problem!");
+                    hasAllCompletedAsExpected = false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return hasAllCompletedAsExpected;
     }
 }
