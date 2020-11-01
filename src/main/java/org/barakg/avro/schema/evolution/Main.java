@@ -4,21 +4,20 @@
 package org.barakg.avro.schema.evolution;
 
 import java.io.IOException;
-import java.net.ConnectException;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Posting compatibility levels checks: " + (testPostingToSchemaRegistry() ? "Done" : "Failed"));
     }
 
-    private static boolean testPostingToSchemaRegistry(){
+    private static boolean testPostingToSchemaRegistry() {
         boolean hasAllCompletedAsExpected = true;
         for (CompatibilityLevel level : CompatibilityLevel.values()) {
             try {
                 SchemaRegistryApi.getInstance().setCurrentCompatibilityLevel(level);
                 CompatibilityLevel actualCompatibilityLevel =
                         SchemaRegistryApi.getInstance().getCurrentCompatibilityLevel();
-                if (!level.equals(actualCompatibilityLevel)){
+                if (!level.equals(actualCompatibilityLevel)) {
                     System.out.println("Houston we have a problem!");
                     hasAllCompletedAsExpected = false;
                 }

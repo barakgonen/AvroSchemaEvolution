@@ -1,13 +1,14 @@
 package org.barakg.avro.schema.evolution;
 
 import okhttp3.*;
+import org.apache.avro.Schema;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 import static org.barakg.avro.schema.evolution.Constants.*;
 
@@ -99,11 +100,11 @@ public class SchemaRegistryApi {
         return schemaVersionsAsListOfStrings.stream().map(Integer::valueOf).collect(Collectors.toList());
     }
 
-    public boolean resgisterSchemaOrUpdateSchema(String schemaName, String schemaAsString) {
+    public boolean resgisterSchemaOrUpdateSchema(Schema schema) {
         Request request = new Request.Builder()
                 .header("Content-Type", "application/vnd.schemaregistry.v1+json")
-                .url(SCHEMA_REGISTRY_SUBJECTS_ENDPOINT + "/" + schemaName + "/versions")
-                .post(parseSchemaFromString(schemaAsString))
+                .url(SCHEMA_REGISTRY_SUBJECTS_ENDPOINT + "/" + schema.getName() + "/versions")
+                .post(parseSchemaFromString(schema.toString()))
                 .build();
         boolean responseStr = false;
         try {
@@ -115,9 +116,9 @@ public class SchemaRegistryApi {
         return responseStr;
     }
 
-    public Optional<Integer> getSchemaVersion(String schemaName) {
+    public Optional<Integer> getSchemaVersion(Schema schema) {
         Request request = new Request.Builder()
-                .url(SCHEMA_REGISTRY_SUBJECTS_ENDPOINT + "/" + schemaName + "/versions")
+                .url(SCHEMA_REGISTRY_SUBJECTS_ENDPOINT + "/" + schema.getName() + "/versions")
                 .build();
         Optional<Integer> schemaVersion = Optional.empty();
         try {
@@ -148,11 +149,11 @@ public class SchemaRegistryApi {
         return RequestBody.create(jsonObject.toString(), JSON);
     }
 
-    public static boolean isCompatibleWithLatestSchemaVersion(String schemaName, String schemaJson){
+    public static boolean isCompatibleWithLatestSchemaVersion(Schema schema){
         Request request = new Request.Builder()
                 .header("Content-Type", "application/vnd.schemaregistry.v1+json")
-                .url(SCHEMA_REGISTRY_COMPATIBILITY_ENDPOINT + "/" + schemaName + "/versions/latest")
-                .post(parseSchemaFromString(schemaJson))
+                .url(SCHEMA_REGISTRY_COMPATIBILITY_ENDPOINT + "/" + schema.getName() + "/versions/latest")
+                .post(parseSchemaFromString(schema.toString()))
                 .build();
         boolean responseStr = false;
         try {
