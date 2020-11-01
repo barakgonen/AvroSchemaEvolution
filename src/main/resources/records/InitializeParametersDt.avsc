@@ -1,0 +1,48 @@
+{
+    "namespace": "org.mashov.avro.services.bla.samples.structures",
+    "type": "record",
+    "name": "InitializeParametersDt",
+    "fields": [
+        {
+            "type": "long",
+            "name": "reportingSystemId",
+            "default": 0
+        },
+        {
+            "type": "string",
+            "name": "callSign",
+            "default": ""
+        },
+        {
+            "type": "long",
+            "name": "privateNetworkNumber",
+            "default": 0
+        },
+        {
+            "type": "long",
+            "name": "globalNetworkNumber",
+            "default": 0
+        },
+        {
+            "type": [
+                "null",
+                "int"
+            ],
+            "name": "blaBlaSecond",
+            "default": null
+        },
+        {
+           "type": "int",
+           "name": "formNumber",
+           "default": -1
+        },
+        {
+            "type": [
+                "null",
+                "int"
+            ],
+            "name": "blaBla",
+            "default": null
+        }
+    ]
+}

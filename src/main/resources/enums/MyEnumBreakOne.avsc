@@ -1,0 +1,11 @@
+{
+    "name": "SystemName",
+    "type": "enum",
+    "symbols": [
+        "NONE",
+        "A",
+        "C",
+        "B"
+    ],
+    "namespace": "org.mashov.bla.blu.bly.enums"
+}

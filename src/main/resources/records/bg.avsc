@@ -1,0 +1,35 @@
+{
+  "type": "record",
+  "name": "bgRecord",
+  "namespace": "org.mashov.bla.schema.data.entity",
+  "doc": "blablablabla",
+  "fields": [
+    {
+      "name": "first",
+      "type": [
+                "null",
+                "string"
+      ],
+      "doc": "bbbbbbb",
+      "default": null
+    },
+    {
+      "name": "second",
+      "type": "string",
+      "doc": "bbbbbbb",
+      "default": null
+    },
+    {
+      "name": "third",
+      "type": "string",
+      "doc": "bbbbbbb",
+      "default": null
+    },
+    {
+      "name": "forth",
+      "type": "string",
+      "doc": "bbbbbbb",
+      "default": "defaultEmpty"
+    }
+  ]
+}
