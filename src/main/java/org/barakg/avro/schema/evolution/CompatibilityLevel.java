@@ -6,8 +6,8 @@ public enum CompatibilityLevel {
     FORWARD("FORWARD"),
     FORWARD_TRANSITIVE("FORWARD_TRANSITIVE"),
     FULL("FULL"),
-    FULL_TRANSITIVE("FULL_TRANSITIVE"),
-    NONE("NONE");
+    FULL_TRANSITIVE("FULL_TRANSITIVE");
+//    NONE("NONE");
 
     public final String label;
 

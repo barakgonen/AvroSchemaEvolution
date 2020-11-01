@@ -25,6 +25,9 @@ dependencies {
     implementation 'com.google.guava:guava:28.2-jre'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
     compile group: 'org.json', name: 'json', version: '20200518'
+    compile group: 'org.apache.avro', name: 'avro', version: '1.8.2'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
