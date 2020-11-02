@@ -152,7 +152,8 @@ public class SimpleRecordTester {
         Schema schema = getSchemaFromFile("records/deletion/InitializeParametersDtDeletionOfNullableFieldAtTheMiddle.avsc");
         assertTrue(SchemaRegistryApi.getInstance().resgisterSchemaOrUpdateSchema(schema));
         assertEquals(2, SchemaRegistryApi.getInstance().getSchemaVersion(schema).get().intValue());
-        assertTrue("Those pair of schemata should not be backward compatible",
+        assertTrue("Those pair of schemata s" +
+                                        "hould not be backward compatible",
                 SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(schema));
     }
 
@@ -323,7 +324,7 @@ public class SimpleRecordTester {
         assertEquals(2, SchemaRegistryApi.getInstance().getSchemaVersion(secondStep).get().intValue());
         if (secondSchemaRegistrationResult)
             assertFalse("Those pair of schemata should not be backward compatible",
-                SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(secondStep));
+                    SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(secondStep));
     }
 
 //    @Test
