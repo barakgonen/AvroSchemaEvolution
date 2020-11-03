@@ -10,29 +10,15 @@ import org.junit.Test;
 import java.util.Collection;
 
 import static org.barakg.avro.schema.evolution.utils.FinalSchemas.bgSchema;
+import static org.barakg.avro.schema.evolution.utils.SchemaGetter.*;
 import static org.junit.Assert.*;
 
 public class SimpleRecordTester {
-
-    private static String readAvroSchemaFromFile(String filePath) {
-        String schema = FileReadingUtils.getFileContent(filePath, SimpleRecordTester.class);
-        return stringAsAvroSchema(schema);
-    }
 
     private static final String BASE_SCHEMA_PATH = "records/InitializeParametersDt.avsc";
     public static final String bgAvroSchema = stringAsAvroSchema(bgSchema);
     private static final String baseAvroSchema = readAvroSchemaFromFile(BASE_SCHEMA_PATH);
     private static final Schema baseSchema = getSchemaFromFile(BASE_SCHEMA_PATH);
-
-    private static String stringAsAvroSchema(String str) {
-        String modifiedString = str.replace("\n", "").replace("\r", "").replace(" ", "");
-        return StringUtils.deleteWhitespace(modifiedString);
-    }
-
-    private static Schema getSchemaFromFile(String pathToFile){
-        String schemaAsString = FileReadingUtils.getFileContent(pathToFile, SimpleRecordTester.class);
-        return Schema.parse(schemaAsString);
-    }
 
     /**
      * TODO: Enum, reordering of fields, renaming of non-nullables
@@ -308,40 +294,4 @@ public class SimpleRecordTester {
         assertTrue("Those pair of schemata should not be backward compatible",
                 SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(schema));
     }
-
-    @Test
-    public void testAddingNullableFieldWithDefaultValueAndInNextEvolutionRemoveDefaultValue(){
-        Schema firstStep = getSchemaFromFile("records/recordEvolution/InitializeParametersDtAdditionOfNullableFieldAtTheEndWithDefaultValue.avsc");
-        Schema secondStep = getSchemaFromFile("records/recordEvolution/InitializeParametersDtAdditionOfNullableFieldAtTheEndWithoutDefaultValue.avsc");
-
-        assertTrue(SchemaRegistryApi.getInstance().resgisterSchemaOrUpdateSchema(firstStep));
-        assertEquals(2, SchemaRegistryApi.getInstance().getSchemaVersion(firstStep).get().intValue());
-        assertTrue("Those pair of schemata should not be backward compatible",
-                SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(firstStep));
-        boolean secondSchemaRegistrationResult = SchemaRegistryApi.getInstance().resgisterSchemaOrUpdateSchema(secondStep);
-        assertFalse(secondSchemaRegistrationResult);
-
-        assertEquals(2, SchemaRegistryApi.getInstance().getSchemaVersion(secondStep).get().intValue());
-        if (secondSchemaRegistrationResult)
-            assertFalse("Those pair of schemata should not be backward compatible",
-                    SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(secondStep));
-    }
-
-//    @Test
-//    public void testAdditionOfNonNullableTypeAtTheEndOfSchemaWithDefaultValueAndInNextCommitRemoveDefaultValue() {
-//        String firstStep = FileReadingUtils.getFileContent("records/recordEvolution/InitializeParametersDtAdditionOfNonNullableFieldAtTheEndWithDefaultValue.avsc");
-//        String secondStep = FileReadingUtils.getFileContent("records/recordEvolution/InitializeParametersDtAdditionOfNonNullableFieldAtTheEndWithoutDefaultValue.avsc");
-//
-//        assertTrue(SchemaRegistryApi.getInstance().resgisterSchemaOrUpdateSchema(SCHEMA_NAME, firstStep));
-//        assertEquals(2, SchemaRegistryApi.getInstance().getSchemaVersion(SCHEMA_NAME).get().intValue());
-//        assertTrue("Those pair of schemata should not be backward compatible",
-//                SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(SCHEMA_NAME, firstStep));
-//
-//        boolean secondSchemaRegistrationResult = SchemaRegistryApi.getInstance().resgisterSchemaOrUpdateSchema(SCHEMA_NAME, secondStep);
-//        assertFalse(secondSchemaRegistrationResult);
-//        assertEquals(2, SchemaRegistryApi.getInstance().getSchemaVersion(SCHEMA_NAME).get().intValue());
-//        if (secondSchemaRegistrationResult)
-//            assertFalse("Those pair of schemata should not be backward compatible",
-//                SchemaRegistryApi.getInstance().isCompatibleWithLatestSchemaVersion(SCHEMA_NAME, secondStep));
-//    }
 }
