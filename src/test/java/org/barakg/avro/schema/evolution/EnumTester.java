@@ -23,7 +23,7 @@ public class EnumTester {
 
     @Test
     public void testReadEnumFromFile() {
-        String enumSchemaAsString = FileReadingUtils.getFileContent("enums/MyEnum.avsc", EnumTester.class);
+        String enumSchemaAsString = FileReadingUtils.getFileContent("/home/barak/IdeaProjects/AvroSchemaEvolution/schemata/enumSchema/src/main/avro/MyEnum.avsc");
         assertEquals("enums not the same", enumBaseDefinition, enumSchemaAsString);
     }
 

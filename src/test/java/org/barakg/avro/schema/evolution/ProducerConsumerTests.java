@@ -1,5 +1,6 @@
 package org.barakg.avro.schema.evolution;
 
+import org.apache.avro.AvroTypeException;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
@@ -65,7 +66,6 @@ public class ProducerConsumerTests {
         // Deserialize it.
         GenericDatumReader<S> reader = new GenericDatumReader<>(writerSchema.getSchema(), readerSchema.getSchema());
         BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(data.toByteArray(), null);
-//        GenericRecord result = null;
         try {
             reader.read(readerSchema, decoder);
         } catch (IOException e) {
@@ -470,5 +470,101 @@ public class ProducerConsumerTests {
         assertEquals(newSchema.getThird(), anotherOldSchema.getThird());
         // In this case, when rename accured we couldnt serialize data...
 //        assertEquals(newSchema.getForthModifided(), anotherOldSchema.getForth());
+    }
+
+    // TODO: retyping is defently not allowed, thus all tests in comment
+    @Test
+    public void testRetypingNullableTypeAtTheBeginningOfSchema() {
+        Long first = Long.valueOf(12313213);
+        InitializeParametersDtRetypingOfNullableFieldAtTheBeggining newSchema = new InitializeParametersDtRetypingOfNullableFieldAtTheBeggining(first, SECOND, THIRD, FORTH);
+
+        boolean hasExceptionThrown = false;
+        try {
+            ByteArrayOutputStream out = serializeSchema(newSchema);
+            deserializeData(anotherOldSchema, newSchema, out);
+        } catch (AvroTypeException e){
+            hasExceptionThrown = true;
+        }
+
+        assertEquals(true, hasExceptionThrown);
+    }
+
+    @Test
+    public void testRetypingNullableTypeAtTheMiddleOfSchema() {
+        String blablaSec = "bb";
+        InitializeParametersDtRetypingOfNullableFieldAtTheMiddle newSchema = new InitializeParametersDtRetypingOfNullableFieldAtTheMiddle(reportingSystemId, callSign, privateNetworkNumber, globalNetworkNumber, blablaSec, formNumber, blaBla);
+
+        boolean hasExceptionThrown = false;
+        try {
+            ByteArrayOutputStream out = serializeSchema(newSchema);
+            deserializeData(anotherOldSchema, newSchema, out);
+        } catch (AvroTypeException e){
+            hasExceptionThrown = true;
+        }
+
+        assertEquals(true, hasExceptionThrown);
+
+    }
+
+    @Test
+    public void testRetypingNullableTypeAtTheEndOfSchema() {
+        Long l = Long.valueOf(2323);
+        InitializeParametersDtRetypingOfNullableFieldAtTheEnd newSchema = new InitializeParametersDtRetypingOfNullableFieldAtTheEnd(reportingSystemId, callSign, privateNetworkNumber, globalNetworkNumber, blaBlaSecond, formNumber, l);
+        boolean hasExceptionThrown = false;
+        try {
+            ByteArrayOutputStream out = serializeSchema(newSchema);
+            deserializeData(anotherOldSchema, newSchema, out);
+        } catch (AvroTypeException e){
+            hasExceptionThrown = true;
+        }
+
+        assertEquals(true, hasExceptionThrown);
+
+
+    }
+
+    @Test
+    public void testRetypingNonNullableTypeAtTheBeginningOfSchema() {
+        InitializeParametersDtRetypingOfNonNullableFieldAtTheBeggining newSchema = new InitializeParametersDtRetypingOfNonNullableFieldAtTheBeggining(String.valueOf(reportingSystemId), callSign, privateNetworkNumber, globalNetworkNumber, blaBlaSecond, formNumber, 23);
+
+        boolean hasExceptionThrown = false;
+        try {
+            ByteArrayOutputStream out = serializeSchema(newSchema);
+            deserializeData(anotherOldSchema, newSchema, out);
+        } catch (AvroTypeException e){
+            hasExceptionThrown = true;
+        }
+
+        assertEquals(true, hasExceptionThrown);
+    }
+
+    @Test
+    public void testRetypingNonNullableTypeAtTheMiddleOfSchema() {
+        InitializeParametersDtRetypingOfNonNullableFieldAtTheMiddle newSchema = new InitializeParametersDtRetypingOfNonNullableFieldAtTheMiddle(reportingSystemId, callSign, privateNetworkNumber, String.valueOf(globalNetworkNumber), blaBlaSecond, formNumber, blaBla);
+
+        boolean hasExceptionThrown = false;
+        try {
+            ByteArrayOutputStream out = serializeSchema(newSchema);
+            deserializeData(anotherOldSchema, newSchema, out);
+        } catch (AvroTypeException e){
+            hasExceptionThrown = true;
+        }
+
+        assertEquals(true, hasExceptionThrown);
+    }
+
+    @Test
+    public void testRetypingNonNullableTypeAtTheEndOfSchema() {
+        InitializeParametersDtRetypingOfNonNullableFieldAtTheEnd newSchema = new InitializeParametersDtRetypingOfNonNullableFieldAtTheEnd(FIRST, SECOND, THIRD, Long.valueOf(54));
+
+        boolean hasExceptionThrown = false;
+        try {
+            ByteArrayOutputStream out = serializeSchema(newSchema);
+            deserializeData(anotherOldSchema, newSchema, out);
+        } catch (AvroTypeException e){
+            hasExceptionThrown = true;
+        }
+
+        assertEquals(true, hasExceptionThrown);
     }
 }
