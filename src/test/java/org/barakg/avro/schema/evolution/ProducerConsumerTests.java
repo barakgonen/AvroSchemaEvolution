@@ -11,9 +11,7 @@ import org.apache.avro.util.Utf8;
 import org.junit.Before;
 import org.junit.Test;
 import org.mashov.avro.services.bla.samples.structures.*;
-import org.mashov.bla.schema.data.entity.InitializeParametersDtDeletionOfNonNullableFieldAtTheEnd;
-import org.mashov.bla.schema.data.entity.InitializeParametersDtDeletionOfNullableFieldAtTheBeggining;
-import org.mashov.bla.schema.data.entity.bgRecord;
+import org.mashov.bla.schema.data.entity.*;
 import wpmcn.MyPair;
 import wpmcn.MyPairMod;
 
@@ -330,7 +328,6 @@ public class ProducerConsumerTests {
 
     @Test
     public void testDeletionNullableTypeAtTheEndOfSchema() {
-
         InitializeParametersDtDeletionOfNullableFieldAtTheEnd newSchema = new InitializeParametersDtDeletionOfNullableFieldAtTheEnd(reportingSystemId, callSign, privateNetworkNumber,
                 globalNetworkNumber, blaBlaSecond, formNumber);
         ByteArrayOutputStream out = serializeSchema(newSchema);
@@ -383,5 +380,95 @@ public class ProducerConsumerTests {
         assertEquals(newSchema.getSecond(), anotherOldSchema.getSecond());
         assertEquals(newSchema.getThird(), anotherOldSchema.getThird());
         assertNotNull(anotherOldSchema.getForth());
+    }
+
+    @Test
+    public void testRenameNullableTypeAtTheBeginningOfSchema() {
+        InitializeParametersDtRenamingOfNullableFieldAtTheBeggining newSchema = new InitializeParametersDtRenamingOfNullableFieldAtTheBeggining(FIRST, SECOND, THIRD, FORTH);
+        ByteArrayOutputStream out = serializeSchema(newSchema);
+        deserializeData(anotherOldSchema, newSchema, out);
+        // In this case, when rename accured we couldnt serialize data...
+//        assertEquals(newSchema.getFirstModified(), anotherOldSchema.getFirst());
+        assertEquals(newSchema.getSecond(), anotherOldSchema.getSecond());
+        assertEquals(newSchema.getThird(), anotherOldSchema.getThird());
+        assertNotNull(newSchema.getForth(), anotherOldSchema.getForth());
+    }
+
+    @Test
+    public void testRenameNullableTypeAtTheMiddleOfSchema() {
+        InitializeParametersDtRenamingOfNullableFieldAtTheMiddle newSchema = new InitializeParametersDtRenamingOfNullableFieldAtTheMiddle(reportingSystemId, callSign, privateNetworkNumber, globalNetworkNumber, blaBlaSecond, formNumber, blaBla);
+        ByteArrayOutputStream out = serializeSchema(newSchema);
+        deserializeData(oldSchema, newSchema, out);
+
+        assertEquals(newSchema.getReportingSystemId(), oldSchema.getReportingSystemId());
+        assertEquals(newSchema.getCallSign(), oldSchema.getCallSign());
+        assertEquals(newSchema.getPrivateNetworkNumber(), oldSchema.getPrivateNetworkNumber());
+        assertEquals(newSchema.getGlobalNetworkNumber(), oldSchema.getGlobalNetworkNumber());
+        // Renaming not allowed
+//        assertEquals(newSchema.getBlaBlaSecondModifided(), oldSchema.getBlaBlaSecond());
+        assertEquals(newSchema.getFormNumber(), oldSchema.getFormNumber());
+        assertEquals(newSchema.getBlaBla(), oldSchema.getBlaBla());
+    }
+
+    @Test
+    public void testRenameNullableTypeAtTheEndOfSchema() {
+        InitializeParametersDtRenamingOfNullableFieldAtTheEnd newSchema = new InitializeParametersDtRenamingOfNullableFieldAtTheEnd(reportingSystemId, callSign, privateNetworkNumber, globalNetworkNumber, blaBlaSecond, formNumber, blaBla);
+        ByteArrayOutputStream out = serializeSchema(newSchema);
+        deserializeData(oldSchema, newSchema, out);
+
+        assertEquals(newSchema.getReportingSystemId(), oldSchema.getReportingSystemId());
+        assertEquals(newSchema.getCallSign(), oldSchema.getCallSign());
+        assertEquals(newSchema.getPrivateNetworkNumber(), oldSchema.getPrivateNetworkNumber());
+        assertEquals(newSchema.getGlobalNetworkNumber(), oldSchema.getGlobalNetworkNumber());
+        assertEquals(newSchema.getBlaBlaSecond(), oldSchema.getBlaBlaSecond());
+        assertEquals(newSchema.getFormNumber(), oldSchema.getFormNumber());
+        // Renaming not allowed
+//        assertEquals(newSchema.getBlaBlaBla(), oldSchema.getBlaBla());
+    }
+
+    @Test
+    public void testRenameNonNullableTypeAtTheBeginningOfSchema() {
+        InitializeParametersDtRenamingOfNonNullableFieldAtTheBeggining newSchema = new InitializeParametersDtRenamingOfNonNullableFieldAtTheBeggining(reportingSystemId, callSign, privateNetworkNumber, globalNetworkNumber, blaBlaSecond, formNumber, blaBla);
+        ByteArrayOutputStream out = serializeSchema(newSchema);
+        deserializeData(oldSchema, newSchema, out);
+        // Renaming not allowed
+//        assertEquals(newSchema.getReportingSystemIdModifided(), oldSchema.getReportingSystemId());
+        assertEquals(newSchema.getCallSign(), oldSchema.getCallSign());
+        assertEquals(newSchema.getPrivateNetworkNumber(), oldSchema.getPrivateNetworkNumber());
+        assertEquals(newSchema.getGlobalNetworkNumber(), oldSchema.getGlobalNetworkNumber());
+        assertEquals(newSchema.getBlaBlaSecond(), oldSchema.getBlaBlaSecond());
+        assertEquals(newSchema.getFormNumber(), oldSchema.getFormNumber());
+        assertEquals(newSchema.getBlaBla(), oldSchema.getBlaBla());
+    }
+
+    @Test
+    public void testRenameNonNullableTypeAtTheMiddleOfSchema() {
+
+        InitializeParametersDtRenamingOfNonNullableFieldAtTheMiddle newSchema = new InitializeParametersDtRenamingOfNonNullableFieldAtTheMiddle(reportingSystemId, callSign, privateNetworkNumber, globalNetworkNumber, blaBlaSecond, formNumber, blaBla);
+        ByteArrayOutputStream out = serializeSchema(newSchema);
+        deserializeData(oldSchema, newSchema, out);
+
+        assertEquals(newSchema.getReportingSystemId(), oldSchema.getReportingSystemId());
+        assertEquals(newSchema.getCallSign(), oldSchema.getCallSign());
+        assertEquals(newSchema.getPrivateNetworkNumber(), oldSchema.getPrivateNetworkNumber());
+        // Renaming not allowed
+//        assertEquals(newSchema.getGlobalNetworkNumberModifided(), oldSchema.getGlobalNetworkNumber());
+        assertEquals(newSchema.getBlaBlaSecond(), oldSchema.getBlaBlaSecond());
+        assertEquals(newSchema.getFormNumber(), oldSchema.getFormNumber());
+        assertEquals(newSchema.getBlaBla(), oldSchema.getBlaBla());
+    }
+
+    @Test
+    public void testRenameNonNullableTypeAtTheEndOfSchema() {
+        InitializeParametersDtRenamingOfNonNullableFieldAtTheEnd newSchema = new InitializeParametersDtRenamingOfNonNullableFieldAtTheEnd(FIRST, SECOND, THIRD, FORTH);
+
+        ByteArrayOutputStream out = serializeSchema(newSchema);
+        deserializeData(anotherOldSchema, newSchema, out);
+
+        assertEquals(newSchema.getFirst(), anotherOldSchema.getFirst());
+        assertEquals(newSchema.getSecond(), anotherOldSchema.getSecond());
+        assertEquals(newSchema.getThird(), anotherOldSchema.getThird());
+        // In this case, when rename accured we couldnt serialize data...
+//        assertEquals(newSchema.getForthModifided(), anotherOldSchema.getForth());
     }
 }
