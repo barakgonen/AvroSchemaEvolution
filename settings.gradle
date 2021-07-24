@@ -8,7 +8,11 @@
  */
 
 rootProject.name = 'AvroSchemaEvolution'
-file('schemata').eachDir { dir ->
-    include dir.name
-    project(":${dir.name}").projectDir = dir
-}
+//file('schemata').eachDir { dir ->
+//    include dir.name
+//    project(":${dir.name}").projectDir = dir
+//}
+
+include ':schemata'
+include ':schema-register'
+

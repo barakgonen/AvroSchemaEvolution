@@ -4,11 +4,20 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
+evaluationDependsOnChildren()
+
+Project subProject1 = project('schemata')
+Project subProject2 = project('schema-register')
+
+
+//subProject2.evaluationDependsOn(subProject1)
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
     mavenCentral()
+
+    maven { url "https://packages.confluent.io/maven/" }
 }
 
 dependencies {
@@ -20,6 +29,13 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     compile fileTree(dir: 'schemata/baseSchemata/build/libs', include: ['*.jar'])
     compile fileTree(dir: 'schemata/myPair/build/libs', include: ['*.jar'])
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
+    compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.30'
+
+// https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
+    compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.6.0'
+    // https://mvnrepository.com/artifact/io.confluent/kafka-avro-serializer
+    compile group: 'io.confluent', name: 'kafka-avro-serializer', version: '5.5.1'
 
 
     // Use JUnit test framework

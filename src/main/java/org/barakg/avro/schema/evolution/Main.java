@@ -4,10 +4,16 @@
 package org.barakg.avro.schema.evolution;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Posting compatibility levels checks: " + (testPostingToSchemaRegistry() ? "Done" : "Failed"));
+//        System.out.println("Posting compatibility levels checks: " + (testPostingToSchemaRegistry() ? "Done" : "Failed"));
+        listJarsClasses("/home/barak/IdeaProjects/AvroSchemaEvolution/schemata/baseSchemata/build/libs/baseSchemata-0.1.0.jar");
     }
 
     private static boolean testPostingToSchemaRegistry() {
@@ -26,5 +32,37 @@ public class Main {
             }
         }
         return hasAllCompletedAsExpected;
+    }
+
+    private static void listClassesFromTar(String pathToTar){
+        // find jar and for each relevant jar, call list JarsClasses
+    }
+
+    private static void listJarsClasses(String pathToJar){
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(pathToJar);
+            Enumeration<JarEntry> e = jarFile.entries();
+
+            URL[] urls = { new URL("jar:file:" + pathToJar+"!/") };
+            URLClassLoader cl = URLClassLoader.newInstance(urls);
+
+            while (e.hasMoreElements()) {
+                JarEntry je = e.nextElement();
+                if(je.isDirectory() || !je.getName().endsWith(".class")){
+                    continue;
+                }
+                // -6 because of .class
+                String className = je.getName().substring(0,je.getName().length()-6);
+                className = className.replace('/', '.');
+                Class c = cl.loadClass(className);
+                System.out.println("Class name is: " + className);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
